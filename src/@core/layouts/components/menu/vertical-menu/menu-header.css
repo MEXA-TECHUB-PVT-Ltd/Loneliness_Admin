@@ -1,0 +1,31 @@
+.scrollbar-container {
+    z-index: -1 !important;
+}
+
+.container-nav-link {
+    margin-top: 40px !important;
+    z-index: 999999999 !important; 
+}
+
+.nav-link-bookmark {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    color: #6c757d;
+    transition: color 0.3s, background-color 0.3s;
+    text-decoration: none;
+    margin: 5px 0;
+}
+
+.nav-link-bookmark:hover {
+    color: #FCE220;
+    background-color: #f8f9fa;
+}
+
+.nav-link-bookmark .ficon {
+    margin-right: 0.5rem;
+}
+
+.bookmark-title {
+    font-size: 0.875rem;
+}
