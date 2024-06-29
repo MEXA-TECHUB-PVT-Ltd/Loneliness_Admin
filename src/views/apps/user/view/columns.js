@@ -5,11 +5,13 @@ import { Link } from "react-router-dom";
 // ** Custom Components
 import Avatar from "@components/avatar";
 
+import defaultImage from "@src/assets/images/avatars/avatar-blank.png";
+
 // ** dates
 import moment from "moment";
 
 // ** Reactstrap Imports
-import { Button, UncontrolledTooltip } from "reactstrap";
+import { Badge, Button, UncontrolledTooltip } from "reactstrap";
 
 // ** Third Party Components
 import {
@@ -37,6 +39,138 @@ const invoiceStatusObj = {
 };
 
 // ** Table columns
+export const reportedColumns = [
+  {
+    name: "#",
+    sortable: true,
+    sortField: "id",
+    minWidth: "107px",
+    selector: (row) => row.action_id,
+    cell: (row) => <div className="fw-bolder">{`#${row?.action_id}`}</div>,
+  },
+  {
+    name: "Reporter",
+    minWidth: "102px",
+    sortable: true,
+    sortField: "invoiceStatus",
+    selector: (row) => row?.reporter_user?.full_name,
+    cell: (row) => {
+      return (
+        <Fragment>
+          <img
+            src={row?.reporter_user?.images?.[0] || defaultImage}
+            alt="PROFILE IMAGE"
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              marginRight: "10px",
+            }}
+          />
+          {row?.reporter_user?.full_name}
+        </Fragment>
+      );
+    },
+  },
+  {
+    name: "Reported",
+    minWidth: "102px",
+    sortable: true,
+    sortField: "invoiceStatus",
+    selector: (row) => row?.reported_user?.full_name,
+    cell: (row) => {
+      return (
+        <Fragment>
+          <img
+            src={row?.reported_user?.images?.[0] || defaultImage}
+            alt="PROFILE IMAGE"
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              marginRight: "10px",
+            }}
+          />
+          {row?.reported_user?.full_name}
+        </Fragment>
+      );
+    },
+  },
+
+  {
+    name: "Reason",
+    sortable: true,
+    minWidth: "150px",
+    sortField: "total",
+    selector: (row) => row?.action_reason,
+    cell: (row) => <span>{row?.action_reason}</span>,
+  },
+  {
+    minWidth: "200px",
+    name: "Reported_at",
+    cell: (row) =>
+      row.action_created_at
+        ? moment(row.action_created_at).format("MMMM Do YYYY, h:mm:ss a")
+        : "",
+  },
+];
+export const userColumns = [
+  {
+    name: "#",
+    sortable: true,
+    sortField: "id",
+    minWidth: "107px",
+    selector: (row) => row.id,
+    cell: (row) => <div className="fw-bolder">{`#${row?.id}`}</div>,
+  },
+  {
+    name: "Username",
+    minWidth: "102px",
+    sortable: true,
+    sortField: "invoiceStatus",
+    selector: (row) => row?.user?.full_name,
+    cell: (row) => {
+      return (
+        <Fragment>
+          <img
+            src={row?.image_urls?.[0] || defaultImage}
+            alt="PROFILE IMAGE"
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              marginRight: "10px",
+            }}
+          />
+          {row?.full_name}
+        </Fragment>
+      );
+    },
+  },
+
+  {
+    name: "Email",
+    sortable: true,
+    minWidth: "150px",
+    sortField: "total",
+    selector: (row) => row?.email,
+    cell: (row) => <span>{row?.email}</span>,
+  },
+  {
+    minWidth: "200px",
+    name: "DOB",
+    cell: (row) => (row.dob ? moment(row.dob).format("MMMM Do YYYY") : ""),
+  },
+  {
+    minWidth: "200px",
+    name: "Block Status",
+    cell: (row) => (
+      <Badge color={row.is_block ? "danger" : "success"}>
+        {row.is_block ? "BLOCK" : "UNBLOCK"}
+      </Badge>
+    ),
+  },
+];
 export const categoriesColumns = [
   {
     name: "#",

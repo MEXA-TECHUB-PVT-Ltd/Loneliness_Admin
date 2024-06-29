@@ -126,6 +126,152 @@ const api = createApi({
         };
       },
     }),
+    // ** Subscription
+    getSubscriptions: builder.query({
+      query: ({ page, limit, token }) => ({
+        url: `subscription/get-all?page=${page}&limit=${limit}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
+    addSubscription: builder.mutation({
+      query: ({ name, amount, interval_name, token }) => {
+        return {
+          url: "subscription/add-update",
+          method: "POST",
+          body: { name, amount, interval_name },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+      },
+    }),
+    deleteSubscription: builder.mutation({
+      query: ({ id, token }) => {
+        return {
+          url: `subscription/delete/${id}`,
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+      },
+    }),
+    // ** polices
+    getPolicies: builder.query({
+      query: ({ type, token }) => ({
+        url: `policies/get/${type}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
+    togglePolicies: builder.mutation({
+      query: ({ content, type, token }) => {
+        return {
+          url: "policies/toggle-policies",
+          method: "POST",
+          body: { content, type },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+      },
+    }),
+    // ** social links
+    getSocialLink: builder.query({
+      query: ({ token }) => ({
+        url: `social-links/get-all`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
+    toggleSocialLinks: builder.mutation({
+      query: ({ platform, link, token }) => {
+        return {
+          url: "social-links/add",
+          method: "POST",
+          body: { platform, link },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+      },
+    }),
+    deleteSocialLinks: builder.mutation({
+      query: ({ id, token }) => {
+        return {
+          url: `social-links/delete/${id}`,
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+      },
+    }),
+    // ** users
+    getUsers: builder.query({
+      query: ({ page, limit, token }) => ({
+        url: `users/get-all/users?page=${page}&limit=${limit}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
+    getBuddies: builder.query({
+      query: ({ page, limit, token }) => ({
+        url: `users/get-all/buddies?page=${page}&limit=${limit}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
+    blockUsers: builder.mutation({
+      query: ({ user_id, is_block, token }) => {
+        return {
+          url: "users/block",
+          method: "PATCH",
+          body: { user_id, is_block },
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+      },
+    }),
+    getUserDetails: builder.query({
+      query: ({ id, token }) => ({
+        url: `users/get/${id}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
+    getReportedBuddies: builder.query({
+      query: ({ page, limit, token }) => ({
+        url: `users/get-reported/buddies?page=${page}&limit=${limit}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
+    getReportedUsers: builder.query({
+      query: ({ page, limit, token }) => ({
+        url: `users/get-reported/users?page=${page}&limit=${limit}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
   }),
 });
 
@@ -143,6 +289,20 @@ export const {
   useAddCategoryMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,
+  useGetSubscriptionsQuery,
+  useAddSubscriptionMutation,
+  useDeleteSubscriptionMutation,
+  useGetPoliciesQuery,
+  useTogglePoliciesMutation,
+  useGetSocialLinkQuery, 
+  useToggleSocialLinksMutation, 
+  useDeleteSocialLinksMutation, 
+  useGetUsersQuery,
+  useGetBuddiesQuery,
+  useBlockUsersMutation,
+  useGetUserDetailsQuery,
+  useGetReportedBuddiesQuery,
+  useGetReportedUsersQuery,
 } = api;
 
 export default api;

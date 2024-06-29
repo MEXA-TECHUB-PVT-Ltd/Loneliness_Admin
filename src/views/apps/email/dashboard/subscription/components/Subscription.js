@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useEffect, Fragment } from "react";
+import React, { useState, Fragment } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 // ** Third Party Components
@@ -7,51 +7,36 @@ import DataTable from "react-data-table-component";
 import { ChevronDown, Edit2, Plus, Trash2 } from "react-feather";
 
 // ** Reactstrap Imports
-import {
-  Card,
-  CardTitle,
-  CardHeader,
-  Button,
-} from "reactstrap";
+import { Card, CardTitle, CardHeader, Button } from "reactstrap";
 
 // ** Styles
-import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 
-// ** Columns
-import {
-  categoriesColumns,
-} from "../../../../user/view/columns";
-
 // ** API Hook
-import { useGetCategoriesQuery } from "../../../../../../redux/api";
-import ComponentSpinner from "../../../../../../@core/components/spinner/Loading-spinner";
-import AddCategoryModal from "./AddCategoryModal";
-import UpdateCategoryModal from "./UpdateCategoryModal";
-import DeleteCategoryModal from "./DeleteCategoryModal";
+import { useGetSubscriptionsQuery } from "../../../../../../redux/api";
 
-const Categories = ({ token }) => {
+import AddUpdateSubscriptionModal from "./AddUpdateSubscriptionModal";
+import DeleteSubscriptionModal from "./DeleteSubscriptionModal";
+import ComponentSpinner from "../../../../../../@core/components/spinner/Loading-spinner";
+
+const Subscription = ({ token }) => {
   // ** States
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(50);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [sort, setSort] = useState("desc");
   const [sortColumn, setSortColumn] = useState("id");
-  const [type, setType] = useState("SERVICE");
-  const [modalOpen, setModalOpen] = useState(false);
-  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [addUpdateModalOpen, setAddUpdateModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [selectedSubscription, setSelectedSubscription] = useState(null);
+  const [selectedSubscriptionId, setSelectedSubscriptionId] = useState(null);
 
-  // ** Fetch transactions using RTK Query
-  const { data, error, isLoading, isFetching, refetch } = useGetCategoriesQuery(
-    {
-      type,
+  // ** Fetch subscriptions using RTK Query
+  const { data, error, isLoading, isFetching, refetch } =
+    useGetSubscriptionsQuery({
       page: currentPage,
       limit: rowsPerPage,
       token,
-    }
-  );
+    });
 
   const handleSort = (column, sortDirection) => {
     setSort(sortDirection);
@@ -59,16 +44,17 @@ const Categories = ({ token }) => {
   };
 
   const handleAddClick = () => {
-    setModalOpen(!modalOpen);
+    setSelectedSubscription(null);
+    setAddUpdateModalOpen(true);
   };
 
-  const handleUpdateClick = (category) => {
-    setSelectedCategory(category);
-    setUpdateModalOpen(true);
+  const handleUpdateClick = (subscription) => {
+    setSelectedSubscription(subscription);
+    setAddUpdateModalOpen(true);
   };
 
-  const handleDeleteClick = (categoryId) => {
-    setSelectedCategoryId(categoryId);
+  const handleDeleteClick = (subscriptionId) => {
+    setSelectedSubscriptionId(subscriptionId);
     setDeleteModalOpen(true);
   };
 
@@ -97,13 +83,34 @@ const Categories = ({ token }) => {
       );
     },
   };
-  const columns = [...categoriesColumns, actionColumn];
+
+  const columns = [
+    {
+      name: "Name",
+      selector: "name",
+      sortable: true,
+      minWidth: "250px",
+    },
+    {
+      name: "Amount",
+      selector: "amount",
+      sortable: true,
+      minWidth: "100px",
+    },
+    {
+      name: "Billing Interval",
+      selector: "interval",
+      sortable: true,
+      minWidth: "100px",
+    },
+    actionColumn,
+  ];
 
   return (
     <div className="invoice-list-wrapper">
       <Card>
         <CardHeader className="py-1">
-          <CardTitle tag="h4">Categories</CardTitle>
+          <CardTitle tag="h4">Subscriptions</CardTitle>
           <Button color="primary" onClick={handleAddClick}>
             <Plus size={15} /> <span className="align-middle ml-1">Add</span>
           </Button>
@@ -122,33 +129,27 @@ const Categories = ({ token }) => {
               sortIcon={<ChevronDown />}
               className="react-dataTable"
               defaultSortField="id"
-              // progressPending={isLoading}
+              progressPending={isLoading}
             />
           </div>
         )}
       </Card>
-      <AddCategoryModal
-        isOpen={modalOpen}
-        toggle={handleAddClick}
+      <AddUpdateSubscriptionModal
+        isOpen={addUpdateModalOpen}
+        toggle={() => setAddUpdateModalOpen(!addUpdateModalOpen)}
         token={token}
         refetch={refetch}
+        subscription={selectedSubscription}
       />
-      <UpdateCategoryModal
-        isOpen={updateModalOpen}
-        toggle={() => setUpdateModalOpen(!updateModalOpen)}
-        token={token}
-        refetch={refetch}
-        category={selectedCategory}
-      />
-      <DeleteCategoryModal
+      <DeleteSubscriptionModal
         isOpen={deleteModalOpen}
         toggle={() => setDeleteModalOpen(!deleteModalOpen)}
         token={token}
         refetch={refetch}
-        categoryId={selectedCategoryId}
+        subscriptionId={selectedSubscriptionId}
       />
     </div>
   );
 };
 
-export default Categories;
+export default Subscription;
