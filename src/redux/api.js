@@ -272,6 +272,70 @@ const api = createApi({
         },
       }),
     }),
+    getRejectedPayments: builder.query({
+      query: ({ page, limit, token }) => ({
+        url: `requests/rejected-payments/get-all?page=${page}&limit=${limit}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
+    getRequest: builder.query({
+      query: ({ id, token }) => ({
+        url: `requests/get/${id}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
+    releasePayment: builder.mutation({
+      query: ({ request_id, buddy_id, user_id, release_to, token }) => ({
+        url: "payments/services/release-payment-user/admin",
+        method: "POST",
+        body: { request_id, buddy_id, user_id, release_to },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
+    getCounts: builder.query({
+      query: ({ token }) => ({
+        url: `universal/users/count`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
+    getMonthlyGraph: builder.query({
+      query: ({ token }) => ({
+        url: `universal/admin/transactions/monthly`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
+    getYearlyGraph: builder.query({
+      query: ({ token }) => ({
+        url: `universal/admin/transactions/yearly`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
+    getDeletedUsers: builder.query({
+      query: ({ role, page, limit, token }) => ({
+        url: `universal/users/deleted?role=${role}&page=${page}&limit=${limit}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
   }),
 });
 
@@ -294,15 +358,22 @@ export const {
   useDeleteSubscriptionMutation,
   useGetPoliciesQuery,
   useTogglePoliciesMutation,
-  useGetSocialLinkQuery, 
-  useToggleSocialLinksMutation, 
-  useDeleteSocialLinksMutation, 
+  useGetSocialLinkQuery,
+  useToggleSocialLinksMutation,
+  useDeleteSocialLinksMutation,
   useGetUsersQuery,
   useGetBuddiesQuery,
   useBlockUsersMutation,
   useGetUserDetailsQuery,
   useGetReportedBuddiesQuery,
   useGetReportedUsersQuery,
+  useGetRejectedPaymentsQuery,
+  useGetRequestQuery,
+  useReleasePaymentMutation,
+  useGetCountsQuery,
+  useGetMonthlyGraphQuery,
+  useGetYearlyGraphQuery,
+  useGetDeletedUsersQuery, 
 } = api;
 
 export default api;

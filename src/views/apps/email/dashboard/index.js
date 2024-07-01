@@ -20,22 +20,55 @@ import SubscribersGained from "@src/views/ui-elements/cards/statistics/Subscribe
 // ** Styles
 import "@styles/react/libs/charts/apex-charts.scss";
 import SetCommission from "./components/SetCommission";
+import { useGetCountsQuery, useGetWalletQuery } from "../../../../redux/api";
+import { getLocalToken } from "../../../../utility/getLocalToken";
+import RejectedReason from "./reject_payments/components/RejectedReasons";
+import TurnOverGraph from "./components/graphs/AdminGraph";
 
 const AnalyticsDashboard = () => {
+  const token = getLocalToken();
   // ** Context
   const { colors } = useContext(ThemeColors);
+  const { data: counts, error, isLoading } = useGetCountsQuery({ token });
+  const { data: wallet } = useGetWalletQuery({ token });
+  
 
   return (
     <div id="dashboard-analytics">
       <Row className="match-height">
-        <Col lg="3" sm="6">
-          <SubscribersGained kFormatter={kFormatter} />
+        <Col lg="2" sm="6">
+          <SubscribersGained
+            kFormatter={kFormatter}
+            count={counts?.result?.users_count}
+            title="Total Users"
+          />
         </Col>
-        <Col lg="3" sm="6">
-          <SubscribersGained kFormatter={kFormatter} />
+        <Col lg="2" sm="6">
+          <SubscribersGained
+            kFormatter={kFormatter}
+            count={counts?.result?.buddy_count}
+            title="Total Buddies"
+          />
+        </Col>
+        <Col lg="2" sm="6">
+          <SubscribersGained
+            kFormatter={kFormatter}
+            count={`$${wallet?.result?.amount || 0.0}`}
+            title="Total Income"
+          />
         </Col>
         <Col lg="6" sm="12">
           <SetCommission />
+        </Col>
+      </Row>
+      <Row className="match-height">
+        <Col lg="6">
+          <TurnOverGraph token={token} />
+        </Col>
+      </Row>
+      <Row className="match-height">
+        <Col lg="12">
+          <RejectedReason token={token} />
         </Col>
       </Row>
     </div>

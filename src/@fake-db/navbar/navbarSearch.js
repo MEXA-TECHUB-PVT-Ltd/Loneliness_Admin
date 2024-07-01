@@ -57,6 +57,22 @@ export const searchArr = [
         link: "/category",
       },
       {
+        id: 489650,
+        target: "deleted-users",
+        isBookmarked: true,
+        title: "Deleted Users",
+        icon: "MessageSquare",
+        link: "/deleted-users",
+      },
+      {
+        id: 984588,
+        target: "rejected-payments",
+        isBookmarked: true,
+        title: "Rejected Payments",
+        icon: "MessageSquare",
+        link: "/rejected-payments",
+      },
+      {
         id: 458625,
         target: "reportedUser",
         isBookmarked: true,

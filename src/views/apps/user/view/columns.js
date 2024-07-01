@@ -39,6 +39,81 @@ const invoiceStatusObj = {
 };
 
 // ** Table columns
+export const rejectPaymentColumns = [
+  {
+    name: "#",
+    sortable: true,
+    sortField: "id",
+    minWidth: "107px",
+    selector: (row) => row.request_id,
+    cell: (row) => <div className="fw-bolder">{`#${row?.request_id}`}</div>,
+  },
+  {
+    name: "User",
+    minWidth: "102px",
+    sortable: true,
+    sortField: "invoiceStatus",
+    selector: (row) => row?.user?.full_name,
+    cell: (row) => {
+      return (
+        <Fragment>
+          <img
+            src={row?.user?.image_url || defaultImage}
+            alt="PROFILE IMAGE"
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              marginRight: "10px",
+            }}
+          />
+          {row?.user?.full_name}
+        </Fragment>
+      );
+    },
+  },
+  {
+    name: "Reported",
+    minWidth: "102px",
+    sortable: true,
+    sortField: "invoiceStatus",
+    selector: (row) => row?.buddy?.full_name,
+    cell: (row) => {
+      return (
+        <Fragment>
+          <img
+            src={row?.buddy?.image_url || defaultImage}
+            alt="PROFILE IMAGE"
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              marginRight: "10px",
+            }}
+          />
+          {row?.buddy?.full_name}
+        </Fragment>
+      );
+    },
+  },
+
+  {
+    name: "Booking Price",
+    sortable: true,
+    minWidth: "150px",
+    sortField: "total",
+    selector: (row) => row?.booking_price,
+    cell: (row) => <span>${row?.booking_price}</span>,
+  },
+  {
+    name: "Released Status",
+    sortable: true,
+    minWidth: "150px",
+    sortField: "total",
+    selector: (row) => row?.is_released,
+    cell: (row) => <span>{row?.is_released ? "RELEASED" : "PENDING"}</span>,
+  },
+];
 export const reportedColumns = [
   {
     name: "#",
@@ -112,6 +187,50 @@ export const reportedColumns = [
       row.action_created_at
         ? moment(row.action_created_at).format("MMMM Do YYYY, h:mm:ss a")
         : "",
+  },
+];
+export const deletedUserColumns = [
+  {
+    name: "#",
+    sortable: true,
+    sortField: "id",
+    minWidth: "107px",
+    selector: (row) => row.id,
+    cell: (row) => <div className="fw-bolder">{`#${row?.id}`}</div>,
+  },
+  {
+    name: "Username",
+    minWidth: "102px",
+    sortable: true,
+    sortField: "invoiceStatus",
+    selector: (row) => row?.user?.full_name,
+    cell: (row) => {
+      return (
+        <Fragment>
+          <img
+            src={row?.image_urls?.[0] || defaultImage}
+            alt="PROFILE IMAGE"
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              marginRight: "10px",
+            }}
+          />
+          {row?.full_name}
+        </Fragment>
+      );
+    },
+  },
+  {
+    minWidth: "200px",
+    name: "Email",
+    cell: (row) => (row.email),
+  },
+  {
+    minWidth: "200px",
+    name: "Remaining Days",
+    cell: (row) => row.remaining_days,
   },
 ];
 export const userColumns = [
