@@ -92,7 +92,7 @@ const Login = () => {
       window.localStorage.setItem("userData", JSON.stringify(user.result));
       jwt.setToken(user.result.token);
       dispatch(handleLogin(user.result));
-      navigate("/apps/email");
+      navigate("/dashboard");
     } catch (err) {
       console.error("Failed to login:", err);
       setApiError(err.data?.message || "An unexpected error occurred.");
