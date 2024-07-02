@@ -7,7 +7,7 @@ import DataTable from "react-data-table-component";
 import { ChevronDown, Edit2, Plus, Trash2 } from "react-feather";
 
 // ** Reactstrap Imports
-import { Card, CardTitle, CardHeader, Button } from "reactstrap";
+import { Card, CardTitle, CardHeader, Button, Tooltip } from "reactstrap";
 
 // ** Styles
 import "@styles/react/libs/tables/react-dataTable-component.scss";
@@ -29,6 +29,7 @@ const Subscription = ({ token }) => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedSubscription, setSelectedSubscription] = useState(null);
   const [selectedSubscriptionId, setSelectedSubscriptionId] = useState(null);
+  const [tooltipOpen, setTooltipOpen] = useState({});
 
   // ** Fetch subscriptions using RTK Query
   const { data, error, isLoading, isFetching, refetch } =
@@ -58,10 +59,20 @@ const Subscription = ({ token }) => {
     setDeleteModalOpen(true);
   };
 
+  const toggleTooltip = (id) => {
+    setTooltipOpen({
+      ...tooltipOpen,
+      [id]: !tooltipOpen[id],
+    });
+  };
+
   const actionColumn = {
     name: "Actions",
     minWidth: "150px",
     cell: (row) => {
+      const editId = `edit-${row.id}`;
+      const deleteId = `delete-${row.id}`;
+
       return (
         <Fragment>
           <Button
@@ -69,16 +80,34 @@ const Subscription = ({ token }) => {
             size="sm"
             className="me-1"
             onClick={() => handleUpdateClick(row)}
+            id={editId}
           >
             <Edit2 size={14} color="#FFFF" />
           </Button>
+          <Tooltip
+            placement="top"
+            isOpen={tooltipOpen[editId]}
+            target={editId}
+            toggle={() => toggleTooltip(editId)}
+          >
+            Edit Subscription
+          </Tooltip>
           <Button
             color="danger"
             size="sm"
             onClick={() => handleDeleteClick(row.id)}
+            id={deleteId}
           >
             <Trash2 size={14} color="#FFFF" />
           </Button>
+          <Tooltip
+            placement="top"
+            isOpen={tooltipOpen[deleteId]}
+            target={deleteId}
+            toggle={() => toggleTooltip(deleteId)}
+          >
+            Delete Subscription
+          </Tooltip>
         </Fragment>
       );
     },
@@ -98,6 +127,12 @@ const Subscription = ({ token }) => {
       minWidth: "100px",
     },
     {
+      name: "Total Subscribers",
+      selector: "user_count",
+      sortable: true,
+      minWidth: "100px",
+    },
+    {
       name: "Billing Interval",
       selector: "interval",
       sortable: true,
@@ -106,14 +141,21 @@ const Subscription = ({ token }) => {
     actionColumn,
   ];
 
+  const intervals = data?.result?.data.map((sub) => sub.interval) || [];
+  const hasAllIntervals = ["month", "year", "quarter"].every((interval) =>
+    intervals.includes(interval)
+  );
+
   return (
     <div className="invoice-list-wrapper">
       <Card>
         <CardHeader className="py-1">
           <CardTitle tag="h4">Subscriptions</CardTitle>
-          <Button color="primary" onClick={handleAddClick}>
-            <Plus size={15} /> <span className="align-middle ml-1">Add</span>
-          </Button>
+          {!hasAllIntervals && (
+            <Button color="primary" onClick={handleAddClick}>
+              <Plus size={15} /> <span className="align-middle ml-1">Add</span>
+            </Button>
+          )}
         </CardHeader>
         {isLoading || isFetching ? (
           <ComponentSpinner />

@@ -14,7 +14,7 @@ const DeleteModal = ({ isOpen, toggle, onDelete, message, isLoading }) => {
           Cancel
         </Button>
         <LoadingButton color="danger" onClick={onDelete} isLoading={isLoading}>
-          Delete
+          Submit
         </LoadingButton>{" "}
       </ModalFooter>
     </Modal>

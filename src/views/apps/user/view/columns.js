@@ -40,14 +40,14 @@ const invoiceStatusObj = {
 
 // ** Table columns
 export const rejectPaymentColumns = [
-  {
-    name: "#",
-    sortable: true,
-    sortField: "id",
-    minWidth: "107px",
-    selector: (row) => row.request_id,
-    cell: (row) => <div className="fw-bolder">{`#${row?.request_id}`}</div>,
-  },
+  // {
+  //   name: "#",
+  //   sortable: true,
+  //   sortField: "id",
+  //   minWidth: "107px",
+  //   selector: (row) => row.request_id,
+  //   cell: (row) => <div className="fw-bolder">{`#${row?.request_id}`}</div>,
+  // },
   {
     name: "User",
     minWidth: "102px",
@@ -115,14 +115,14 @@ export const rejectPaymentColumns = [
   },
 ];
 export const reportedColumns = [
-  {
-    name: "#",
-    sortable: true,
-    sortField: "id",
-    minWidth: "107px",
-    selector: (row) => row.action_id,
-    cell: (row) => <div className="fw-bolder">{`#${row?.action_id}`}</div>,
-  },
+  // {
+  //   name: "#",
+  //   sortable: true,
+  //   sortField: "id",
+  //   minWidth: "107px",
+  //   selector: (row) => row.action_id,
+  //   cell: (row) => <div className="fw-bolder">{`#${row?.action_id}`}</div>,
+  // },
   {
     name: "Reporter",
     minWidth: "102px",
@@ -190,14 +190,14 @@ export const reportedColumns = [
   },
 ];
 export const deletedUserColumns = [
-  {
-    name: "#",
-    sortable: true,
-    sortField: "id",
-    minWidth: "107px",
-    selector: (row) => row.id,
-    cell: (row) => <div className="fw-bolder">{`#${row?.id}`}</div>,
-  },
+  // {
+  //   name: "#",
+  //   sortable: true,
+  //   sortField: "id",
+  //   minWidth: "107px",
+  //   selector: (row) => row.id,
+  //   cell: (row) => <div className="fw-bolder">{`#${row?.id}`}</div>,
+  // },
   {
     name: "Username",
     minWidth: "102px",
@@ -234,14 +234,14 @@ export const deletedUserColumns = [
   },
 ];
 export const userColumns = [
-  {
-    name: "#",
-    sortable: true,
-    sortField: "id",
-    minWidth: "107px",
-    selector: (row) => row.id,
-    cell: (row) => <div className="fw-bolder">{`#${row?.id}`}</div>,
-  },
+  // {
+  //   name: "#",
+  //   sortable: true,
+  //   sortField: "id",
+  //   minWidth: "107px",
+  //   selector: (row) => row.id,
+  //   cell: (row) => <div className="fw-bolder">{`#${row?.id}`}</div>,
+  // },
   {
     name: "Username",
     minWidth: "102px",
@@ -277,8 +277,13 @@ export const userColumns = [
   },
   {
     minWidth: "200px",
-    name: "DOB",
-    cell: (row) => (row.dob ? moment(row.dob).format("MMMM Do YYYY") : ""),
+    name: "Subscription Name",
+    cell: (row) => row.subscription_name || "NOT SUBSCRIBED",
+  },
+  {
+    minWidth: "200px",
+    name: "Total Services",
+    cell: (row) => row.total_requests || "0",
   },
   {
     minWidth: "200px",
@@ -291,14 +296,14 @@ export const userColumns = [
   },
 ];
 export const categoriesColumns = [
-  {
-    name: "#",
-    sortable: true,
-    sortField: "id",
-    minWidth: "107px",
-    selector: (row) => row.id,
-    cell: (row) => <div className="fw-bolder">{`#${row.id}`}</div>,
-  },
+  // {
+  //   name: "#",
+  //   sortable: true,
+  //   sortField: "id",
+  //   minWidth: "107px",
+  //   selector: (row) => row.id,
+  //   cell: (row) => <div className="fw-bolder">{`#${row.id}`}</div>,
+  // },
   {
     name: "Image",
     minWidth: "102px",
@@ -328,15 +333,62 @@ export const categoriesColumns = [
     },
   },
 ];
+
+export const getColumns = (type) => {
+  const columns = [
+    {
+      name: "Username",
+      minWidth: "102px",
+      sortable: true,
+      sortField: "invoiceStatus",
+      selector: (row) => row?.user?.full_name,
+      cell: (row) => {
+        return (
+          <Fragment>
+            <img
+              src={row?.user?.image_url || "U"}
+              alt="PROFILE IMAGE"
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                marginRight: "10px",
+              }}
+            />
+            {row?.user?.full_name}
+          </Fragment>
+        );
+      },
+    },
+    {
+      name: "Amount",
+      sortable: true,
+      minWidth: "150px",
+      sortField: "total",
+      selector: (row) => row?.amount,
+      cell: (row) => <span>${row?.amount || 0}</span>,
+    },
+    {
+      minWidth: "200px",
+      name: "Transaction Date",
+      cell: (row) => moment(row.created_at).format("MMMM Do YYYY, h:mm:ss a"),
+    },
+  ];
+
+  if (type === "SERVICE") {
+    columns.splice(2, 0, {
+      name: "Fee Deducted",
+      sortable: true,
+      minWidth: "150px",
+      sortField: "total",
+      selector: (row) => row?.admin_fee,
+      cell: (row) => <span>${row?.admin_fee || 0}</span>,
+    });
+  }
+
+  return columns;
+};
 export const transactionColumns = [
-  {
-    name: "#",
-    sortable: true,
-    sortField: "id",
-    minWidth: "107px",
-    selector: (row) => row.id,
-    cell: (row) => <div className="fw-bolder">{`#${row.id}`}</div>,
-  },
   {
     name: "Username",
     minWidth: "102px",
@@ -349,9 +401,9 @@ export const transactionColumns = [
           <img
             src={row?.user?.image_url || "U"}
             alt="PROFILE IMAGE"
-            style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+            style={{ width: "40px", height: "40px", borderRadius: "50%", marginRight: "10px" }}
           />
-          {row?.user?.full_name}
+          {' ' }{row?.user?.full_name}
         </Fragment>
       );
     },
@@ -364,6 +416,14 @@ export const transactionColumns = [
     sortField: "total",
     selector: (row) => row?.amount,
     cell: (row) => <span>${row?.amount || 0}</span>,
+  },
+  {
+    name: "Fee Deducted",
+    sortable: true,
+    minWidth: "150px",
+    sortField: "total",
+    selector: (row) => row?.admin_fee,
+    cell: (row) => <span>${row?.admin_fee || 0}</span>,
   },
   {
     minWidth: "200px",

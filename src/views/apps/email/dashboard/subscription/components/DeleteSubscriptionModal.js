@@ -39,7 +39,7 @@ const DeleteSubscriptionModal = ({
           onClick={handleDelete}
           isLoading={isLoading}
         >
-          Delete
+          Submit
         </LoadingButton>
         <Button color="secondary" onClick={toggle}>
           Cancel

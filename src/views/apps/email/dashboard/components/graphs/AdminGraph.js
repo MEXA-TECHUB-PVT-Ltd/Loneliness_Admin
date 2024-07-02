@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Chart from "react-apexcharts";
 import { Card } from "reactstrap";
-import { useGetMonthlyGraphQuery, useGetYearlyGraphQuery } from "../../../../../../redux/api";
+import {
+  useGetMonthlyGraphQuery,
+  useGetYearlyGraphQuery,
+} from "../../../../../../redux/api";
 import ComponentSpinner from "../../../../../../@core/components/spinner/Loading-spinner";
 
 const TurnOverGraph = ({ token }) => {
@@ -29,10 +32,7 @@ const TurnOverGraph = ({ token }) => {
     useGetYearlyGraphQuery({ token });
 
   useEffect(() => {
-    if (
-      chartType === "monthly" &&
-      monthlyData?.result?.length > 0
-    ) {
+    if (chartType === "monthly" && monthlyData?.result?.length > 0) {
       const categories = monthNames;
       const series = new Array(12).fill(0);
 
@@ -41,10 +41,7 @@ const TurnOverGraph = ({ token }) => {
       });
 
       setChartData({ categories, series });
-    } else if (
-      chartType === "yearly" &&
-      yearlyData?.result?.length > 0
-    ) {
+    } else if (chartType === "yearly" && yearlyData?.result?.length > 0) {
       const categories = [];
       const series = [];
 
@@ -63,6 +60,7 @@ const TurnOverGraph = ({ token }) => {
       toolbar: {
         show: true,
       },
+      height: 300, 
     },
     colors: ["#0F6D6A"],
     plotOptions: {
@@ -141,12 +139,12 @@ const TurnOverGraph = ({ token }) => {
   ];
 
   return (
-    <Card className="profile-details-card px-2 py-1 shadow-sm ">
+    <Card className="profile-details-card px-2 py-1 shadow-sm">
       <div className="d-flex justify-content-between">
         <h4 className="my-color" style={{ margin: 0 }}>
           Turnover Chart
         </h4>
-        <div className="d-flex align-items-center ">
+        <div className="d-flex align-items-center">
           <select
             value={chartType}
             onChange={(e) => setChartType(e.target.value)}
@@ -168,7 +166,14 @@ const TurnOverGraph = ({ token }) => {
       (isLoadingYearly && chartType === "yearly") ? (
         <ComponentSpinner />
       ) : (
-        <Chart options={options} series={seriesData} type="bar" />
+        <div style={{ height: "350px" }}>
+          <Chart
+            options={options}
+            series={seriesData}
+            type="bar"
+            height="100%" 
+          />
+        </div>
       )}
     </Card>
   );

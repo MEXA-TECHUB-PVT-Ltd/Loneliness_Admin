@@ -6,11 +6,9 @@ import {
   Card,
   CardBody,
   CardTitle,
-  Form,
   FormGroup,
   Label,
   Input,
-  Button,
   Alert,
 } from "reactstrap";
 
@@ -21,14 +19,12 @@ import {
   useGetCommissionQuery,
   useSetCommissionMutation,
 } from "../../../../../redux/api";
-import LoadingButton from "../../../../components/buttons/LoadingButton";
-import { notify } from "../../../../../utility/toast";
 import ComponentSpinner from "../../../../../@core/components/spinner/Loading-spinner";
-
+import SetCommissionModal from "./SetCommissionModal";
 
 const SetCommission = () => {
   const [commission, setCommission] = useState("");
-  const [isEditing, setIsEditing] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState(null);
   const token = getLocalToken();
 
@@ -53,25 +49,9 @@ const SetCommission = () => {
     }
   }, [data, getError]);
 
-  const handleEditClick = () => {
-    setIsEditing(true);
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
     setError(null);
-  };
-
-  const handleSaveClick = async () => {
-    try {
-      await setCommissionMutation({
-        per_hour_rate: commission,
-        token,
-      }).unwrap();
-      notify("Commission updated successfully!");
-      refetch();
-      setIsEditing(false);
-      setError(null);
-    } catch (error) {
-      // Corrected from setError2 to error
-      setError("Failed to set commission");
-    }
   };
 
   return (
@@ -94,50 +74,44 @@ const SetCommission = () => {
           <Edit3
             size={20}
             style={{ cursor: "pointer", color: "#7367f0" }}
-            onClick={handleEditClick}
+            onClick={toggleModal}
           />
         </CardTitle>
         {isLoading ? (
           <ComponentSpinner />
         ) : (
-          <Form>
-            <FormGroup>
-              <Label for="commission" style={{ fontWeight: "bold" }}>
-                Commission (%)
-              </Label>
-              <Input
-                type="number"
-                name="commission"
-                id="commission"
-                placeholder="Enter commission"
-                value={commission}
-                onChange={(e) => setCommission(e.target.value)}
-                disabled={!isEditing}
-                style={{
-                  borderColor: isEditing ? "#7367f0" : "#d8d6de",
-                  backgroundColor: isEditing ? "#ffffff" : "#f1f2f6",
-                  cursor: isEditing ? "text" : "not-allowed",
-                }}
-              />
-            </FormGroup>
-            {isEditing && (
-              <LoadingButton
-                type="submit"
-                color="primary"
-                onClick={handleSaveClick}
-                isLoading={isSetting}
-              >
-                Save
-              </LoadingButton>
-            )}
-          </Form>
+          <FormGroup>
+            <Label for="commission" style={{ fontWeight: "bold" }}>
+              Commission (%)
+            </Label>
+            <Input
+              type="number"
+              name="commission"
+              id="commission"
+              placeholder="Enter commission"
+              value={commission}
+              readOnly
+              style={{
+                borderColor: "#d8d6de",
+                backgroundColor: "#f1f2f6",
+                cursor: "not-allowed",
+              }}
+            />
+          </FormGroup>
         )}
         {error && <Alert color="danger">{error}</Alert>}
-        <p style={{ visibility: "hidden" }}>
-          You have done <strong>57.6%</strong> more sales today. Check your new
-          badge in your profile.
-        </p>
       </CardBody>
+
+      <SetCommissionModal
+        isModalOpen={isModalOpen}
+        toggleModal={toggleModal}
+        commission={commission}
+        setCommission={setCommission}
+        setCommissionMutation={setCommissionMutation}
+        token={token}
+        refetch={refetch}
+        isSetting={isSetting}
+      />
     </Card>
   );
 };

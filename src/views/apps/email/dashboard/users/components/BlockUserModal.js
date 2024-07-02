@@ -42,7 +42,7 @@ const BlockUserModal = ({ isOpen, toggle, token, refetch, selectedUser }) => {
           isLoading={isLoading}
           onClick={handleBlock}
         >
-          {!selectedUser.is_block ? "Block" : "Unblock"}
+          Submit
         </LoadingButton>
       </ModalFooter>
     </Modal>

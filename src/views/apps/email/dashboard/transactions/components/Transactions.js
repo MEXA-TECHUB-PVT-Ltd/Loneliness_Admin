@@ -1,20 +1,6 @@
-// ** React Imports
-import { useState, useEffect, Fragment } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
-// ** Third Party Components
+import React, { useState, Fragment, useMemo } from "react";
 import DataTable from "react-data-table-component";
-import {
-  ChevronDown,
-  ExternalLink,
-  Printer,
-  FileText,
-  File,
-  Clipboard,
-  Copy,
-} from "react-feather";
-
-// ** Reactstrap Imports
+import { ChevronDown } from "react-feather";
 import {
   Card,
   CardTitle,
@@ -24,33 +10,29 @@ import {
   DropdownToggle,
   UncontrolledButtonDropdown,
 } from "reactstrap";
-
-// ** Styles
+import moment from "moment";
 import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
-
-// ** Columns
-import { transactionColumns } from "../../../../user/view/columns";
-
-// ** API Hook
 import { useGetTransactionsQuery } from "../../../../../../redux/api";
 import ComponentSpinner from "../../../../../../@core/components/spinner/Loading-spinner";
+import { getColumns } from "../../../../user/view/columns";
 
-const Transactions = ({token}) => {
-  // ** States
+
+const Transactions = ({ token }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [sort, setSort] = useState("desc");
   const [sortColumn, setSortColumn] = useState("id");
   const [type, setType] = useState("SERVICE");
 
-  // ** Fetch transactions using RTK Query
   const { data, error, isLoading, isFetching } = useGetTransactionsQuery({
     type,
     page: currentPage,
     limit: rowsPerPage,
     token,
   });
+
+  const columns = useMemo(() => getColumns(type), [type]);
 
   const handleSort = (column, sortDirection) => {
     setSort(sortDirection);
@@ -59,13 +41,23 @@ const Transactions = ({token}) => {
 
   const handleExportChange = (newType) => {
     setType(newType);
+    setCurrentPage(1); // Reset to the first page when type changes
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+  };
+
+  const handleRowsPerPageChange = (newPerPage) => {
+    setRowsPerPage(newPerPage);
+    setCurrentPage(1); // Reset to the first page when rows per page changes
   };
 
   return (
     <div className="invoice-list-wrapper">
       <Card>
-        <CardHeader className="py-1">
-          <CardTitle tag="h4">Transactions</CardTitle>
+        <CardHeader className="py-1 d-flex justify-content-between align-items-center">
+          <CardTitle tag="h4">{type} Transactions</CardTitle>
           <UncontrolledButtonDropdown>
             <DropdownToggle color="secondary" outline caret>
               <span>Select Transactions</span>
@@ -99,14 +91,21 @@ const Transactions = ({token}) => {
             <DataTable
               noHeader
               sortServer
-              columns={transactionColumns}
+              columns={columns}
               responsive={true}
               onSort={handleSort}
               data={data?.result?.data || []}
               sortIcon={<ChevronDown />}
               className="react-dataTable"
               defaultSortField="id"
-              progressPending={isLoading}
+              pagination
+              paginationServer
+              paginationTotalRows={data?.result?.totalCount || 0}
+              paginationDefaultPage={currentPage}
+              onChangePage={handlePageChange}
+              paginationRowsPerPageOptions={[10, 25, 50, 100]}
+              onChangeRowsPerPage={handleRowsPerPageChange}
+              paginationPerPage={rowsPerPage}
             />
           </div>
         )}
