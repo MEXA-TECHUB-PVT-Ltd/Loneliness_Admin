@@ -1,14 +1,8 @@
-// ** React Imports
-import { useState, Fragment } from "react";
-
-// ** Third Party Components
+import React, { useState, Fragment, useEffect } from "react";
 import DataTable from "react-data-table-component";
-import { ChevronDown, Edit2, Eye, Lock, Trash2, Unlock } from "react-feather";
-
-// ** Reactstrap Imports
+import { ChevronDown, Eye, Lock, Unlock } from "react-feather";
 import {
   Card,
-  CardTitle,
   CardHeader,
   Button,
   Nav,
@@ -17,16 +11,11 @@ import {
   TabContent,
   TabPane,
   Tooltip,
+  Input,
 } from "reactstrap";
-
-// ** Styles
 import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
-
-// ** Columns
 import { userColumns } from "../../../../user/view/columns";
-
-// ** API Hook
 import {
   useGetBuddiesQuery,
   useGetUsersQuery,
@@ -36,18 +25,18 @@ import BlockUserModal from "./BlockUserModal";
 import { useNavigate } from "react-router-dom";
 
 const Users = ({ token }) => {
-  // ** States
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(50);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
   const [sort, setSort] = useState("desc");
   const [sortColumn, setSortColumn] = useState("id");
   const [activeTab, setActiveTab] = useState("users");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [tooltipOpen, setTooltipOpen] = useState({});
+  const [searchText, setSearchText] = useState("");
+  const [filteredData, setFilteredData] = useState([]);
   const navigate = useNavigate();
 
-  // ** Fetch data using RTK Query
   const {
     data: usersData,
     error: usersError,
@@ -59,6 +48,7 @@ const Users = ({ token }) => {
     limit: rowsPerPage,
     token,
   });
+
   const {
     data: buddiesData,
     error: buddiesError,
@@ -71,9 +61,21 @@ const Users = ({ token }) => {
     token,
   });
 
+  useEffect(() => {
+    if (activeTab === "users" && usersData?.result?.data) {
+      setFilteredData(usersData.result.data);
+    } else if (activeTab === "buddies" && buddiesData?.result?.data) {
+      setFilteredData(buddiesData.result.data);
+    }
+  }, [usersData, buddiesData, activeTab]);
+
   const handleSort = (column, sortDirection) => {
     setSort(sortDirection);
     setSortColumn(column.sortField);
+  };
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   const toggleModal = (user) => {
@@ -88,12 +90,29 @@ const Users = ({ token }) => {
     });
   };
 
+  const handleSearch = (event) => {
+    setSearchText(event.target.value);
+    if (event.target.value === "") {
+      setFilteredData(
+        activeTab === "users" ? usersData.result.data : buddiesData.result.data
+      );
+    } else {
+      const filtered = (
+        activeTab === "users" ? usersData.result.data : buddiesData.result.data
+      ).filter((user) =>
+        user?.full_name?.toLowerCase().includes(event.target.value.toLowerCase())
+      );
+      setFilteredData(filtered);
+    }
+  };
+
   const actionColumn = {
     name: "Actions",
     minWidth: "150px",
     cell: (row) => {
       const lockUnlockId = `lockUnlock-${row.id}`;
       const lockUnlockText = row?.is_block ? "Unblock User" : "Block User";
+      const viewDetailsId = `viewDetails-${row.id}`;
 
       return (
         <Fragment>
@@ -122,9 +141,18 @@ const Users = ({ token }) => {
             color="info"
             size="sm"
             onClick={() => navigate(`/user-details/${row.id}`)}
+            id={viewDetailsId}
           >
             <Eye size={14} color="#FFFF" />
           </Button>
+          <Tooltip
+            placement="top"
+            isOpen={tooltipOpen[viewDetailsId]}
+            target={viewDetailsId}
+            toggle={() => toggleTooltip(viewDetailsId)}
+          >
+            View Details
+          </Tooltip>
         </Fragment>
       );
     },
@@ -133,37 +161,52 @@ const Users = ({ token }) => {
   const columns = [...userColumns, actionColumn];
 
   const toggleTab = (tab) => {
-    if (activeTab !== tab) setActiveTab(tab);
+    if (activeTab !== tab) {
+      setActiveTab(tab);
+      setCurrentPage(1);
+      setSearchText("");
+      setFilteredData(
+        tab === "users" ? usersData.result.data : buddiesData.result.data
+      );
+    }
   };
 
   return (
     <div className="invoice-list-wrapper">
       <Card>
-        <CardHeader className="py-1">
-          {/* <CardTitle tag="h4">Categories</CardTitle> */}
+        <CardHeader className="py-1 d-flex justify-content-between">
+          <div>
+            <Nav tabs className="justify-content-center">
+              <NavItem>
+                <NavLink
+                  active={activeTab === "users"}
+                  onClick={() => {
+                    toggleTab("users");
+                  }}
+                >
+                  Users
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink
+                  active={activeTab === "buddies"}
+                  onClick={() => {
+                    toggleTab("buddies");
+                  }}
+                >
+                  Buddies
+                </NavLink>
+              </NavItem>
+            </Nav>
+          </div>
+          <Input
+            type="text"
+            value={searchText}
+            onChange={handleSearch}
+            placeholder="Search by name"
+            style={{ width: "250px" }}
+          />
         </CardHeader>
-        <Nav tabs>
-          <NavItem>
-            <NavLink
-              active={activeTab === "users"}
-              onClick={() => {
-                toggleTab("users");
-              }}
-            >
-              Users
-            </NavLink>
-          </NavItem>
-          <NavItem>
-            <NavLink
-              active={activeTab === "buddies"}
-              onClick={() => {
-                toggleTab("buddies");
-              }}
-            >
-              Buddies
-            </NavLink>
-          </NavItem>
-        </Nav>
         <TabContent activeTab={activeTab}>
           <TabPane tabId="users">
             {isUsersLoading || isUsersFetching ? (
@@ -176,10 +219,19 @@ const Users = ({ token }) => {
                   columns={columns}
                   responsive={true}
                   onSort={handleSort}
-                  data={usersData?.result?.data || []}
+                  data={filteredData}
                   sortIcon={<ChevronDown />}
                   className="react-dataTable"
                   defaultSortField="id"
+                  pagination
+                  paginationServer
+                  paginationTotalRows={usersData?.result?.totalCount || 0}
+                  paginationDefaultPage={currentPage}
+                  onChangePage={handlePageChange}
+                  paginationRowsPerPageOptions={[10, 25, 50, 100]}
+                  onChangeRowsPerPage={(newPerPage) =>
+                    setRowsPerPage(newPerPage)
+                  }
                 />
               </div>
             )}
@@ -195,10 +247,19 @@ const Users = ({ token }) => {
                   columns={columns}
                   responsive={true}
                   onSort={handleSort}
-                  data={buddiesData?.result?.data || []}
+                  data={filteredData}
                   sortIcon={<ChevronDown />}
                   className="react-dataTable"
                   defaultSortField="id"
+                  pagination
+                  paginationServer
+                  paginationTotalRows={buddiesData?.result?.totalCount || 0}
+                  paginationDefaultPage={currentPage}
+                  onChangePage={handlePageChange}
+                  paginationRowsPerPageOptions={[10, 25, 50, 100]}
+                  onChangeRowsPerPage={(newPerPage) =>
+                    setRowsPerPage(newPerPage)
+                  }
                 />
               </div>
             )}

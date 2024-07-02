@@ -17,6 +17,7 @@ import {
   NavLink,
   TabContent,
   TabPane,
+  Tooltip,
 } from "reactstrap";
 
 // ** Styles
@@ -40,6 +41,8 @@ const Reported = ({ token }) => {
   const [sort, setSort] = useState("desc");
   const [sortColumn, setSortColumn] = useState("id");
   const [activeTab, setActiveTab] = useState("users");
+  const [tooltipOpen, setTooltipOpen] = useState({});
+
   const navigate = useNavigate();
 
   // ** Fetch data using RTK Query
@@ -71,19 +74,40 @@ const Reported = ({ token }) => {
     setSort(sortDirection);
     setSortColumn(column.sortField);
   };
+  const toggleTooltip = (id) => {
+    setTooltipOpen({
+      ...tooltipOpen,
+      [id]: !tooltipOpen[id],
+    });
+  };
 
   const actionColumn = {
     name: "Actions",
     minWidth: "100px",
-    cell: (row) => (
-      <Button
-        color="info"
-        size="sm"
-        onClick={() => navigate(`/user-details/${row.reported_user.id}`)}
-      >
-        <Eye size={14} color="#FFF" />
-      </Button>
-    ),
+    cell: (row) => {
+      const viewDetailsId = `viewDetails-${row.id}`;
+
+      return (
+        <Fragment>
+          <Button
+            color="info"
+            size="sm"
+            onClick={() => navigate(`/user-details/${row.reported_user.id}`)}
+            id={viewDetailsId}
+          >
+            <Eye size={14} color="#FFF" />
+          </Button>
+          <Tooltip
+            placement="top"
+            isOpen={tooltipOpen[viewDetailsId]}
+            target={viewDetailsId}
+            toggle={() => toggleTooltip(viewDetailsId)}
+          >
+            View Details
+          </Tooltip>
+        </Fragment>
+      );
+    },
   };
 
   const userColumns = [...reportedColumns, actionColumn];
@@ -98,7 +122,7 @@ const Reported = ({ token }) => {
         <CardHeader className="py-1">
           <CardTitle tag="h4">Reported Users and Buddies</CardTitle>
         </CardHeader>
-        <Nav tabs>
+        <Nav tabs className="justify-content-center">
           <NavItem>
             <NavLink
               active={activeTab === "users"}

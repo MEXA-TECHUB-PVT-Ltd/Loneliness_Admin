@@ -4,6 +4,7 @@ import { getLocalToken } from "../../../../../utility/getLocalToken";
 import UserDetails from "./components/UserDetails";
 import { useGetUserDetailsQuery } from "../../../../../redux/api";
 import ComponentSpinner from "../../../../../@core/components/spinner/Loading-spinner";
+import UserRequests from "./components/UserRequests";
 
 const index = () => {
   const params = useParams();
@@ -28,6 +29,7 @@ const index = () => {
   return (
     <div>
       <UserDetails data={data} token={token} refetch={refetch} />
+      <UserRequests token={token} />
     </div>
   );
 };

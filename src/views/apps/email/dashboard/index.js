@@ -36,33 +36,33 @@ const AnalyticsDashboard = () => {
   return (
     <div id="dashboard-analytics">
       <Row className="match-height">
-        <Col lg="2" sm="6">
+        <Col lg="3" sm="6">
           <SubscribersGained
             kFormatter={kFormatter}
             count={counts?.result?.users_count}
             title="Total Users"
           />
         </Col>
-        <Col lg="2" sm="6">
+        <Col lg="3" sm="6">
           <SubscribersGained
             kFormatter={kFormatter}
             count={counts?.result?.buddy_count}
             title="Total Buddies"
           />
         </Col>
-        <Col lg="2" sm="6">
+        <Col lg="3" sm="6">
           <SubscribersGained
             kFormatter={kFormatter}
             count={`$${wallet?.result?.amount || 0.0}`}
             title="Total Income"
           />
         </Col>
-        <Col lg="6" sm="12">
+        <Col lg="3" sm="12">
           <SetCommission />
         </Col>
       </Row>
       <Row className="match-height">
-        <Col lg="6">
+        <Col lg="12">
           <TurnOverGraph token={token} />
         </Col>
       </Row>

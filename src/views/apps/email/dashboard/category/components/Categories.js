@@ -7,21 +7,14 @@ import DataTable from "react-data-table-component";
 import { ChevronDown, Edit2, Plus, Trash2 } from "react-feather";
 
 // ** Reactstrap Imports
-import {
-  Card,
-  CardTitle,
-  CardHeader,
-  Button,
-} from "reactstrap";
+import { Card, CardTitle, CardHeader, Button, Tooltip } from "reactstrap";
 
 // ** Styles
 import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 
 // ** Columns
-import {
-  categoriesColumns,
-} from "../../../../user/view/columns";
+import { categoriesColumns } from "../../../../user/view/columns";
 
 // ** API Hook
 import { useGetCategoriesQuery } from "../../../../../../redux/api";
@@ -42,6 +35,7 @@ const Categories = ({ token }) => {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [tooltipOpen, setTooltipOpen] = useState({});
 
   // ** Fetch transactions using RTK Query
   const { data, error, isLoading, isFetching, refetch } = useGetCategoriesQuery(
@@ -72,10 +66,19 @@ const Categories = ({ token }) => {
     setDeleteModalOpen(true);
   };
 
+  const toggleTooltip = (id) => {
+    setTooltipOpen({
+      ...tooltipOpen,
+      [id]: !tooltipOpen[id],
+    });
+  };
+
   const actionColumn = {
     name: "Actions",
     minWidth: "150px",
     cell: (row) => {
+      const updateId = `update-${row.id}`;
+      const deleteId = `delete-${row.id}`;
       return (
         <Fragment>
           <Button
@@ -83,20 +86,39 @@ const Categories = ({ token }) => {
             size="sm"
             className="me-1"
             onClick={() => handleUpdateClick(row)}
+            id={updateId}
           >
             <Edit2 size={14} color="#FFFF" />
           </Button>
+          <Tooltip
+            placement="top"
+            isOpen={tooltipOpen[updateId]}
+            target={updateId}
+            toggle={() => toggleTooltip(updateId)}
+          >
+            Edit
+          </Tooltip>
           <Button
             color="danger"
             size="sm"
             onClick={() => handleDeleteClick(row.id)}
+            id={deleteId}
           >
             <Trash2 size={14} color="#FFFF" />
           </Button>
+          <Tooltip
+            placement="top"
+            isOpen={tooltipOpen[deleteId]}
+            target={deleteId}
+            toggle={() => toggleTooltip(deleteId)}
+          >
+            Delete
+          </Tooltip>
         </Fragment>
       );
     },
   };
+
   const columns = [...categoriesColumns, actionColumn];
 
   return (
@@ -122,7 +144,14 @@ const Categories = ({ token }) => {
               sortIcon={<ChevronDown />}
               className="react-dataTable"
               defaultSortField="id"
-              // progressPending={isLoading}
+              pagination
+              paginationServer
+              paginationTotalRows={data?.result?.totalCount || 0}
+              paginationDefaultPage={currentPage}
+              onChangePage={(page) => setCurrentPage(page)}
+              paginationRowsPerPageOptions={[10, 25, 50, 100]}
+              onChangeRowsPerPage={(newPerPage) => setRowsPerPage(newPerPage)}
+              paginationPerPage={rowsPerPage}
             />
           </div>
         )}

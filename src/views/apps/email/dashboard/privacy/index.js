@@ -6,7 +6,7 @@ const index = () => {
   const token = getLocalToken();
   return (
     <div>
-      <Policies token={token} type="PRIVACY" title="Privacy" />
+      <Policies token={token} type="PRIVACY" title="Privacy Policies" />
     </div>
   );
 };

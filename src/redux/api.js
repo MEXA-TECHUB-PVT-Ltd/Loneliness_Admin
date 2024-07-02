@@ -35,6 +35,22 @@ const api = createApi({
         body: body,
       }),
     }),
+    changePassword: builder.mutation({
+      query: ({
+        old_password,
+        new_password,
+        confirm_password,
+        role,
+        token,
+      }) => ({
+        url: "auth/change-password",
+        method: "POST",
+        body: { old_password, new_password, confirm_password, role },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
     // ** commission
     getCommission: builder.query({
       query: (token) => ({
@@ -336,6 +352,15 @@ const api = createApi({
         },
       }),
     }),
+    getUsersRequests: builder.query({
+      query: ({ id, page, limit, token }) => ({
+        url: `universal/users/requests/${id}?page=${page}&limit=${limit}`,
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    }),
   }),
 });
 
@@ -373,7 +398,9 @@ export const {
   useGetCountsQuery,
   useGetMonthlyGraphQuery,
   useGetYearlyGraphQuery,
-  useGetDeletedUsersQuery, 
+  useGetDeletedUsersQuery,
+  useChangePasswordMutation,
+  useGetUsersRequestsQuery,
 } = api;
 
 export default api;

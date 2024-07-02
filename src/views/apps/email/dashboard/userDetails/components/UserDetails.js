@@ -24,7 +24,7 @@ const UserDetails = ({ data, token, refetch }) => {
   };
 
   return (
-    <Container className="mt-5">
+    <>
       <Row>
         <Col md="4">
           <Card>
@@ -33,7 +33,7 @@ const UserDetails = ({ data, token, refetch }) => {
             </CardHeader>
             <CardBody className="text-center">
               <img
-                src={user?.image_urls[0] || defaultImage}
+                src={user?.image_urls?.[0] || defaultImage}
                 alt="Profile"
                 className="img-fluid rounded-circle"
                 style={{
@@ -72,10 +72,10 @@ const UserDetails = ({ data, token, refetch }) => {
             <CardBody>
               <Table responsive bordered>
                 <tbody>
-                  <tr>
+                  {/* <tr>
                     <th scope="row">ID</th>
                     <td>{user?.id}</td>
-                  </tr>
+                  </tr> */}
                   <tr>
                     <th scope="row">About</th>
                     <td>{user?.about || "N/A"}</td>
@@ -91,10 +91,6 @@ const UserDetails = ({ data, token, refetch }) => {
                   <tr>
                     <th scope="row">Gender</th>
                     <td>{user?.gender}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Looking For Gender</th>
-                    <td>{user?.looking_for_gender}</td>
                   </tr>
                   <tr>
                     <th scope="row">Phone</th>
@@ -132,33 +128,42 @@ const UserDetails = ({ data, token, refetch }) => {
                     <td>
                       {user?.subscription_name ? (
                         <Badge color="info" className="me-1">
-                          {user?.subscription_name}
+                          {user?.subscription_name || "NOT SUBSCRIBED"}
                         </Badge>
                       ) : (
-                        "NULL"
+                        "NOT SUBSCRIBED"
                       )}
                     </td>
                   </tr>
-                  <tr>
-                    <th scope="row">Height</th>
-                    <td>{`${user?.height_ft || 0} ft ${
-                      user?.height_in || 0
-                    } in`}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Weight</th>
-                    <td>{`${user?.weight} ${user?.weight_unit}`}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Hourly Rate</th>
-                    <td>{`$${user?.hourly_rate}/hr`}</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Wallet Amount</th>
-                    <td>
-                      {user?.wallet?.amount ? user.wallet.amount : "00.00"}
-                    </td>
-                  </tr>
+                  {user?.role === "BUDDY" && (
+                    <>
+                      <tr>
+                        <th scope="row">Looking For Gender</th>
+                        <td>{user?.looking_for_gender}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Height</th>
+                        <td>{`${user?.height_ft || 0} ft ${
+                          user?.height_in || 0
+                        } in`}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Weight</th>
+                        <td>{`${user?.weight} ${user?.weight_unit}`}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Hourly Rate</th>
+                        <td>{`$${user?.hourly_rate}/hr`}</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Wallet Amount</th>
+                        <td>
+                          {user?.wallet?.amount ? user.wallet.amount : "00.00"}
+                        </td>
+                      </tr>
+                    </>
+                  )}
+
                   <tr>
                     <th scope="row">Languages</th>
                     <td>
@@ -166,15 +171,15 @@ const UserDetails = ({ data, token, refetch }) => {
                         <Badge key={index} color="info" className="me-1">
                           {language}
                         </Badge>
-                      ))}
+                      )) || "Not available"}
                     </td>
                   </tr>
                   <tr>
                     <th scope="row">Location</th>
                     <td>
-                      {user?.location
+                      {user?.location.address
                         ? `${user.location.address}, ${user.location.city}, ${user.location.state}, ${user.location.country}, ${user.location.postal_code}`
-                        : "N/A"}
+                        : "Not available"}
                     </td>
                   </tr>
                   <tr>
@@ -200,7 +205,7 @@ const UserDetails = ({ data, token, refetch }) => {
         refetch={refetch}
         selectedUser={user}
       />
-    </Container>
+    </>
   );
 };
 
