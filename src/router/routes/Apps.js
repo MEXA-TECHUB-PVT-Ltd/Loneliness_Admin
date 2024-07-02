@@ -19,6 +19,15 @@ const Privacy = lazy(() => import("../../views/apps/email/dashboard/privacy"));
 const SocialLinks = lazy(() =>
   import("../../views/apps/email/dashboard/social_links")
 );
+const RejectPayments = lazy(() =>
+  import("../../views/apps/email/dashboard/reject_payments")
+);
+const RejectPaymentsDetails = lazy(() =>
+  import("../../views/apps/email/dashboard/reject_payments_details")
+);
+const DeletedUsers = lazy(() =>
+  import("../../views/apps/email/dashboard/deleted_users")
+);
 
 
 const AppRoutes = [
@@ -29,6 +38,10 @@ const AppRoutes = [
   {
     element: <Transactions />,
     path: "/transactions",
+  },
+  {
+    element: <DeletedUsers />,
+    path: "/deleted-users",
   },
   {
     element: <Users />,
@@ -61,6 +74,14 @@ const AppRoutes = [
   {
     element: <SocialLinks />,
     path: "/social-links",
+  },
+  {
+    element: <RejectPayments />,
+    path: "/rejected-payments",
+  },
+  {
+    element: <RejectPaymentsDetails />,
+    path: "/rejected-payments-details/:id",
   },
 ];
 
