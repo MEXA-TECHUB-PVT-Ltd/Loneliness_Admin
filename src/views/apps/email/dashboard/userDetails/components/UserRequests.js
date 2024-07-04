@@ -6,6 +6,7 @@ import moment from "moment";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
 import { useGetUsersRequestsQuery } from "../../../../../../redux/api";
 import ComponentSpinner from "../../../../../../@core/components/spinner/Loading-spinner";
+import defaultImage from "@src/assets/images/avatars/avatar-blank.png";
 
 const userRequestsColumns = [
   {
@@ -15,7 +16,7 @@ const userRequestsColumns = [
     cell: (row) => (
       <>
         <img
-          src={row.image_url}
+          src={row.image_url || defaultImage}
           alt="buddy"
           style={{
             width: "40px",
@@ -24,7 +25,7 @@ const userRequestsColumns = [
             marginRight: "10px",
           }}
         />
-        {row.username}
+        {row.username || "Nill"}
       </>
     ),
   },
@@ -32,17 +33,19 @@ const userRequestsColumns = [
     name: "Category",
     selector: "category_name",
     sortable: true,
+    cell: (row) => row.category_name || "Nill",
   },
   {
-    name: "Booking Date",
+    name: "Date",
     selector: "booking_date",
     sortable: true,
     cell: (row) => moment(row.booking_date).format("MMMM Do YYYY"),
   },
   {
-    name: "Booking Time",
+    name: "Time",
     selector: "booking_time",
     sortable: true,
+    cell: (row) => moment(row.booking_time, "hh:mm:A").format("hh:mm A"),
   },
   {
     name: "Date of Birth",
@@ -122,7 +125,7 @@ const UserRequests = ({ token }) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle tag="h4">User Requests</CardTitle>
+        <CardTitle tag="h4">Services Details</CardTitle>
       </CardHeader>
       <CardBody>
         <div className="react-dataTable">

@@ -277,8 +277,69 @@ export const userColumns = [
   },
   {
     minWidth: "200px",
-    name: "Subscription Name",
-    cell: (row) => row.subscription_name || "NOT SUBSCRIBED",
+    name: "Subscription",
+    cell: (row) => (
+      <Badge color={!row.subscription_name ? "secondary" : "success"}>
+        {row.subscription_name ? "Subscribed" : "Unsubscribed"}
+      </Badge>
+    ),
+  },
+  {
+    minWidth: "200px",
+    name: "Total Services",
+    cell: (row) => row.total_requests_user || "0",
+  },
+  {
+    minWidth: "200px",
+    name: "Block Status",
+    cell: (row) => (
+      <Badge color={row.is_block ? "danger" : "success"}>
+        {row.is_block ? "BLOCK" : "UNBLOCK"}
+      </Badge>
+    ),
+  },
+];
+export const buddyColumns = [
+  // {
+  //   name: "#",
+  //   sortable: true,
+  //   sortField: "id",
+  //   minWidth: "107px",
+  //   selector: (row) => row.id,
+  //   cell: (row) => <div className="fw-bolder">{`#${row?.id}`}</div>,
+  // },
+  {
+    name: "Username",
+    minWidth: "102px",
+    sortable: true,
+    sortField: "invoiceStatus",
+    selector: (row) => row?.user?.full_name,
+    cell: (row) => {
+      return (
+        <Fragment>
+          <img
+            src={row?.image_urls?.[0] || defaultImage}
+            alt="PROFILE IMAGE"
+            style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              marginRight: "10px",
+            }}
+          />
+          {row?.full_name}
+        </Fragment>
+      );
+    },
+  },
+
+  {
+    name: "Email",
+    sortable: true,
+    minWidth: "150px",
+    sortField: "total",
+    selector: (row) => row?.email,
+    cell: (row) => <span>{row?.email}</span>,
   },
   {
     minWidth: "200px",
@@ -361,7 +422,7 @@ export const getColumns = (type) => {
       },
     },
     {
-      name: "Amount",
+      name: "Total Amount",
       sortable: true,
       minWidth: "150px",
       sortField: "total",
@@ -377,7 +438,7 @@ export const getColumns = (type) => {
 
   if (type === "SERVICE") {
     columns.splice(2, 0, {
-      name: "Fee Deducted",
+      name: "Admin Commission",
       sortable: true,
       minWidth: "150px",
       sortField: "total",

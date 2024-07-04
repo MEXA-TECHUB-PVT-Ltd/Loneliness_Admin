@@ -41,7 +41,7 @@ const SetCommissionModal = ({
 
   return (
     <Modal isOpen={isModalOpen} toggle={toggleModal}>
-      <ModalHeader toggle={toggleModal}>Edit Commission</ModalHeader>
+      <ModalHeader toggle={toggleModal}>Set Commission</ModalHeader>
       <ModalBody>
         <FormGroup>
           <Label for="commission" style={{ fontWeight: "bold" }}>
@@ -64,6 +64,9 @@ const SetCommissionModal = ({
         {error && <Alert color="danger">{error}</Alert>}
       </ModalBody>
       <ModalFooter>
+        <Button color="secondary" onClick={toggleModal}>
+          Cancel
+        </Button>
         <LoadingButton
           color="primary"
           onClick={handleSaveClick}
@@ -71,9 +74,6 @@ const SetCommissionModal = ({
         >
           Save
         </LoadingButton>
-        <Button color="secondary" onClick={toggleModal}>
-          Cancel
-        </Button>
       </ModalFooter>
     </Modal>
   );

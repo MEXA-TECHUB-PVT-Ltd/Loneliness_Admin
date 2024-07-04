@@ -76,6 +76,7 @@ const RejectedReason = ({ token }) => {
             size="sm"
             className="me-1"
             onClick={() => handleReleaseClick(row)}
+            disabled={row?.is_released}
           >
             Release
           </Button>
@@ -85,9 +86,9 @@ const RejectedReason = ({ token }) => {
             onClick={() =>
               navigate(`/rejected-payments-details/${row.request_id}`, {
                 state: {
-                  buddyId: row.buddy.id,
-                  buddyFullName: row.buddy.full_name,
-                  buddyImageUrl: row.buddy.image_url,
+                  userId: row.user.id,
+                  userFullName: row.user.full_name,
+                  userImageUrl: row.user.image_url,
                 },
               })
             }

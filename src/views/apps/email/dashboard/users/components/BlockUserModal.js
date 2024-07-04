@@ -31,8 +31,13 @@ const BlockUserModal = ({ isOpen, toggle, token, refetch, selectedUser }) => {
 
   return (
     <Modal isOpen={isOpen} toggle={toggle}>
-      <ModalHeader toggle={toggle}>Block User</ModalHeader>
-      <ModalBody>Are you sure you want to block this user?</ModalBody>
+      <ModalHeader toggle={toggle}>
+        {!selectedUser.is_block ? "Block" : "Unblock"} User
+      </ModalHeader>
+      <ModalBody>
+        Are you sure you want to {!selectedUser.is_block ? "Block" : "Unblock"}{" "}
+        this user?
+      </ModalBody>
       <ModalFooter>
         <Button color="secondary" onClick={toggle}>
           Cancel

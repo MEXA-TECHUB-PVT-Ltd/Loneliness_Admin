@@ -26,7 +26,7 @@ const index = () => {
     <div>
       <RequestDetails
         data={data.result}
-        buddyDetails={location.state || {}}
+        userDetails={location.state || {}}
         refetch={refetch}
         token={token}
       />

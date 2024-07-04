@@ -27,9 +27,11 @@ const Wallet = ({ token }) => {
   return (
     <Card>
       <CardBody>
-        <CardTitle tag="h4">Wallet Information</CardTitle>
+        <CardTitle tag="h4">Wallet</CardTitle>
         <CardText>
-          <strong>Total Amount:</strong> ${data?.result?.amount || 0.0}
+          <h4>
+            <strong>Total Amount: ${data?.result?.amount || 0.0}</strong>
+          </h4>
         </CardText>
       </CardBody>
     </Card>

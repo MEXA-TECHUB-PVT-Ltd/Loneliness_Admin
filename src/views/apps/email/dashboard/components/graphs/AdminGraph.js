@@ -60,9 +60,9 @@ const TurnOverGraph = ({ token }) => {
       toolbar: {
         show: true,
       },
-      height: 300, 
+      height: 300,
     },
-    colors: ["#0F6D6A"],
+    colors: ["#FCE220"],
     plotOptions: {
       bar: {
         horizontal: false,

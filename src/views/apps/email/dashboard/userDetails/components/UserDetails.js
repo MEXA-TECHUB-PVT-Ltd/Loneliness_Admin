@@ -93,14 +93,6 @@ const UserDetails = ({ data, token, refetch }) => {
                     <td>{user?.gender}</td>
                   </tr>
                   <tr>
-                    <th scope="row">Phone</th>
-                    <td>
-                      {user?.phone_number
-                        ? `+${user?.phone_country_code} ${user?.phone_number}`
-                        : "NULL"}
-                    </td>
-                  </tr>
-                  <tr>
                     <th scope="row">Block Status</th>
                     <td>
                       {
@@ -113,34 +105,51 @@ const UserDetails = ({ data, token, refetch }) => {
                       }
                     </td>
                   </tr>
-                  <tr>
-                    <th scope="row">Subscription Status</th>
-                    <td>
-                      {
-                        <Badge color="info" className="me-1">
-                          {user?.is_subscribed ? "ACTIVE" : "INACTIVE"}
-                        </Badge>
-                      }
-                    </td>
-                  </tr>
-                  <tr>
-                    <th scope="row">Subscription Name</th>
-                    <td>
-                      {user?.subscription_name ? (
-                        <Badge color="info" className="me-1">
-                          {user?.subscription_name || "NOT SUBSCRIBED"}
-                        </Badge>
-                      ) : (
-                        "NOT SUBSCRIBED"
-                      )}
-                    </td>
-                  </tr>
-                  {user?.role === "BUDDY" && (
+                  {user?.role === "USER" && (
                     <>
+                      <tr>
+                        <th scope="row">Phone</th>
+                        <td>
+                          {user?.phone_number
+                            ? `+${user?.phone_country_code} ${user?.phone_number}`
+                            : "NULL"}
+                        </td>
+                      </tr>
                       <tr>
                         <th scope="row">Looking For Gender</th>
                         <td>{user?.looking_for_gender}</td>
                       </tr>
+                      <tr>
+                        <th scope="row">Subscription Status</th>
+                        <td>
+                          {
+                            <Badge
+                              color={
+                                user?.is_subscribed ? "success" : "secondary"
+                              }
+                              className="me-1"
+                            >
+                              {user?.is_subscribed ? "ACTIVE" : "INACTIVE"}
+                            </Badge>
+                          }
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Subscription</th>
+                        <td>
+                          {user?.subscription_name ? (
+                            <Badge color="info" className="me-1">
+                              {user?.subscription_name || "Nill"}
+                            </Badge>
+                          ) : (
+                            "NOT SUBSCRIBED"
+                          )}
+                        </td>
+                      </tr>
+                    </>
+                  )}
+                  {user?.role === "BUDDY" && (
+                    <>
                       <tr>
                         <th scope="row">Height</th>
                         <td>{`${user?.height_ft || 0} ft ${

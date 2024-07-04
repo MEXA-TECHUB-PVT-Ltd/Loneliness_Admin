@@ -50,14 +50,14 @@ const Transactions = ({ token }) => {
 
   const handleRowsPerPageChange = (newPerPage) => {
     setRowsPerPage(newPerPage);
-    setCurrentPage(1); // Reset to the first page when rows per page changes
+    setCurrentPage(1);
   };
 
   return (
     <div className="invoice-list-wrapper">
       <Card>
         <CardHeader className="py-1 d-flex justify-content-between align-items-center">
-          <CardTitle tag="h4">{type} Transactions</CardTitle>
+          <CardTitle tag="h4">{type[0] + type.toLowerCase().slice(1)} Transactions</CardTitle>
           <UncontrolledButtonDropdown>
             <DropdownToggle color="secondary" outline caret>
               <span>Select Transactions</span>
@@ -67,19 +67,19 @@ const Transactions = ({ token }) => {
                 className="w-100"
                 onClick={() => handleExportChange("SUBSCRIPTION")}
               >
-                <span>SUBSCRIPTION</span>
+                <span>Subscription</span>
               </DropdownItem>
               <DropdownItem
                 className="w-100"
                 onClick={() => handleExportChange("CHAT")}
               >
-                <span>CHAT</span>
+                <span>Chat</span>
               </DropdownItem>
               <DropdownItem
                 className="w-100"
                 onClick={() => handleExportChange("SERVICE")}
               >
-                <span>SERVICE</span>
+                <span>Service</span>
               </DropdownItem>
             </DropdownMenu>
           </UncontrolledButtonDropdown>
