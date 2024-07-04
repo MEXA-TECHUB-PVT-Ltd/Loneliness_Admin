@@ -70,36 +70,14 @@ const SetCommission = () => {
             alignItems: "center",
           }}
         >
-          Set Commission
+          <h5 className="card-text mt-1 text-primary">Commission</h5>
           <Edit3
             size={20}
-            style={{ cursor: "pointer", color: "#7367f0" }}
+            style={{ cursor: "pointer", color: "#FCE220" }}
             onClick={toggleModal}
           />
         </CardTitle>
-        {isLoading ? (
-          <ComponentSpinner />
-        ) : (
-          <FormGroup>
-            <Label for="commission" style={{ fontWeight: "bold" }}>
-              Commission (%)
-            </Label>
-            <Input
-              type="number"
-              name="commission"
-              id="commission"
-              placeholder="Enter commission"
-              value={commission}
-              readOnly
-              style={{
-                borderColor: "#d8d6de",
-                backgroundColor: "#f1f2f6",
-                cursor: "not-allowed",
-              }}
-            />
-          </FormGroup>
-        )}
-        {error && <Alert color="danger">{error}</Alert>}
+        {isLoading ? <ComponentSpinner /> : <h2 className="">{commission}%</h2>}
       </CardBody>
 
       <SetCommissionModal

@@ -18,17 +18,17 @@ const StatsWithAreaChart = props => {
   return (
     <Card {...rest}>
       <CardBody
-        className={classnames('pb-0', {
-          [className]: className
+        className={classnames("pb-0", {
+          [className]: className,
         })}
       >
-        <Avatar className='avatar-stats p-50 m-0' color={`light-${color}`} icon={icon} />
-        <p className='card-text mt-1'>{statTitle}</p>
-        <h2 className='fw-bolder mt-1'>{stats}</h2>
+        {/* <Avatar className='avatar-stats p-50 m-0' color={`light-${color}`} icon={icon} /> */}
+        <h5 className="card-text mt-1 text-primary">{statTitle}</h5>
+        <h2 className="fw-bolder mt-1">{stats}</h2>
       </CardBody>
-      <Chart options={options} series={series} type={type} height={height ? height : 100} />
+      {/* <Chart options={options} series={series} type={type} height={height ? height : 100} /> */}
     </Card>
-  )
+  );
 }
 
 export default StatsWithAreaChart

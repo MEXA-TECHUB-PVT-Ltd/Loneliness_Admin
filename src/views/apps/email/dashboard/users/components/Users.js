@@ -15,7 +15,7 @@ import {
 } from "reactstrap";
 import "@styles/react/apps/app-invoice.scss";
 import "@styles/react/libs/tables/react-dataTable-component.scss";
-import { userColumns } from "../../../../user/view/columns";
+import { buddyColumns, userColumns } from "../../../../user/view/columns";
 import {
   useGetBuddiesQuery,
   useGetUsersQuery,
@@ -99,8 +99,14 @@ const Users = ({ token }) => {
     } else {
       const filtered = (
         activeTab === "users" ? usersData.result.data : buddiesData.result.data
-      ).filter((user) =>
-        user?.full_name?.toLowerCase().includes(event.target.value.toLowerCase())
+      ).filter(
+        (user) =>
+          user?.full_name
+            ?.toLowerCase()
+            .includes(event.target.value.toLowerCase()) ||
+          user?.email
+            ?.toLowerCase()
+            .includes(event.target.value.toLowerCase())
       );
       setFilteredData(filtered);
     }
@@ -159,6 +165,7 @@ const Users = ({ token }) => {
   };
 
   const columns = [...userColumns, actionColumn];
+  const buddy_columns = [...buddyColumns, actionColumn];
 
   const toggleTab = (tab) => {
     if (activeTab !== tab) {
@@ -203,7 +210,7 @@ const Users = ({ token }) => {
             type="text"
             value={searchText}
             onChange={handleSearch}
-            placeholder="Search by name"
+            placeholder="Search by name or email"
             style={{ width: "250px" }}
           />
         </CardHeader>
@@ -244,7 +251,7 @@ const Users = ({ token }) => {
                 <DataTable
                   noHeader
                   sortServer
-                  columns={columns}
+                  columns={buddy_columns}
                   responsive={true}
                   onSort={handleSort}
                   data={filteredData}

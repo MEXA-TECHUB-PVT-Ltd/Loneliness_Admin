@@ -14,7 +14,7 @@ import moment from "moment";
 import ReleasePaymentModal from "../../reject_payments/components/ReleasePaymentModal";
 import { useReleasePaymentMutation } from "../../../../../../redux/api";
 
-const RequestDetails = ({ data, buddyDetails, refetch, token }) => {
+const RequestDetails = ({ data, userDetails, refetch, token }) => {
   const {
     id,
     booking_date,
@@ -50,7 +50,7 @@ const RequestDetails = ({ data, buddyDetails, refetch, token }) => {
     try {
       await releasePayment({
         request_id: id,
-        buddy_id: buddyDetails.buddyId,
+        buddy_id: userDetails.userId,
         user_id: user.id,
         release_to,
         token,
@@ -77,15 +77,70 @@ const RequestDetails = ({ data, buddyDetails, refetch, token }) => {
           size="sm"
           className="me-1"
           onClick={() => handleReleaseClick()}
+          disabled={is_released}
         >
           Release Payment
         </Button>
       </div>
+
       <Card className="mb-4">
         <CardBody>
           <Row>
             <Col md="6">
-              <CardTitle tag="h5">General Information</CardTitle>
+              <CardTitle tag="h5">User Information</CardTitle>
+              <CardText>
+                {/* <strong>Full Name:</strong> */}
+                {
+                  <img
+                    src={userDetails?.userImageUrl}
+                    alt="User profile"
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      marginRight: "10px",
+                      borderRadius: "50%",
+                    }}
+                  />
+                }
+                {userDetails?.userFullName}
+              </CardText>
+              <CardText>
+                <strong>Rejected Reason:</strong> {canceled_reason}
+              </CardText>
+            </Col>
+            <Col md="6">
+              <CardTitle tag="h5">Buddy Information</CardTitle>
+              <CardText>
+                {/* <strong>Full Name:</strong> */}
+                {user.images &&
+                  user.images.map((img, index) => (
+                    <img
+                      key={index}
+                      src={img.image_url}
+                      alt="User profile"
+                      style={{
+                        width: "60px",
+                        height: "60px",
+                        marginRight: "10px",
+                        borderRadius: "50%",
+                      }}
+                    />
+                  ))}
+                {user?.full_name}
+              </CardText>
+              <CardText>
+                <strong>Rejected Reason:</strong> {rejected_reason_buddy}
+              </CardText>
+            </Col>
+          </Row>
+        </CardBody>
+      </Card>
+
+      <Card className="mb-4">
+        <CardBody>
+          <Row>
+            <Col md="6">
+              <CardTitle tag="h5">Service Details</CardTitle>
               <CardText>
                 <strong>Booking Date:</strong>{" "}
                 {moment(booking_date).format("MMMM Do YYYY")}
@@ -102,120 +157,59 @@ const RequestDetails = ({ data, buddyDetails, refetch, token }) => {
               <CardText>
                 <strong>Location:</strong> {location}
               </CardText>
-              <CardText>
-                <strong>Status:</strong>{" "}
-                <Badge color={status === "PAID" ? "success" : "warning"}>
-                  {status}
-                </Badge>
-              </CardText>
             </Col>
             <Col md="6">
-              <CardTitle tag="h5">Status Information</CardTitle>
-              <CardText>
-                <strong>Release Status:</strong>{" "}
-                <Badge color={is_released === false ? "primary" : "success"}>
-                  {is_released ? "Released" : "Pending"}
-                </Badge>
-              </CardText>
-              <CardText>
+              {/* <CardText>
                 <strong>Status:</strong>{" "}
                 <Badge
                   color={
-                    canceled_status === "REJECTED" ? "danger" : "info"
+                    status === "PAID"
+                      ? "success"
+                      : status === "COMPLETED"
+                      ? "success"
+                      : "warning"
                   }
+                >
+                  {status}
+                </Badge>
+              </CardText> */}
+              {/* <CardText>
+                <strong>Status:</strong>{" "}
+                <Badge
+                  color={canceled_status === "REJECTED" ? "danger" : "info"}
                 >
                   {canceled_status}
                 </Badge>
-              </CardText>
-              <CardText>
-                <strong>Canceled Reason:</strong> {canceled_reason}
-              </CardText>
-              <CardText>
-                <strong>Rejected Reason Buddy:</strong> {rejected_reason_buddy}
-              </CardText>
-              {/* <CardText>
-                <strong>Release Payment Requests:</strong>{" "}
-                {release_payment_requests}
               </CardText> */}
-              <CardText>
-                <strong>Created At:</strong>{" "}
-                {moment(created_at).format("MMMM Do YYYY, h:mm:ss a")}
-              </CardText>
-              <CardText>
-                <strong>Updated At:</strong>{" "}
-                {moment(updated_at).format("MMMM Do YYYY, h:mm:ss a")}
-              </CardText>
               <CardText>
                 <strong>Paid At:</strong>{" "}
                 {paid_at
                   ? moment(paid_at).format("MMMM Do YYYY, h:mm:ss a")
                   : "N/A"}
               </CardText>
+              <CardText>
+                <strong>Category:</strong>{" "}
+                {/* <img
+                src={category.image_url}
+                alt="Category"
+                style={{ width: "30px", height: "30px", borderRadius: "50%" }}
+              /> {' '} */}
+                {category.name}
+              </CardText>
+              <CardText>
+                <strong>Release Status:</strong>{" "}
+                <Badge color={is_released === false ? "primary" : "success"}>
+                  {is_released ? "Released" : "Pending"}
+                </Badge>
+              </CardText>
             </Col>
           </Row>
         </CardBody>
       </Card>
 
-      <h3 className="my-4">Buddy Details</h3>
-      <Card className="mb-4">
-        <CardBody>
-          <Row>
-            <Col md="6">
-              <CardTitle tag="h5">User Information</CardTitle>
-              <CardText>
-                <strong>Full Name:</strong> {buddyDetails?.buddyFullName}
-              </CardText>
-              {
-                <img
-                  src={buddyDetails?.buddyImageUrl}
-                  alt="User profile"
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    marginRight: "10px",
-                    borderRadius: "50%",
-                  }}
-                />
-              }
-            </Col>
-            <Col md="6">
-              <CardTitle tag="h5">User Information</CardTitle>
-              <CardText>
-                <strong>Full Name:</strong> {user?.full_name}
-              </CardText>
-              {user.images &&
-                user.images.map((img, index) => (
-                  <img
-                    key={index}
-                    src={img.image_url}
-                    alt="User profile"
-                    style={{
-                      width: "100px",
-                      height: "100px",
-                      marginRight: "10px",
-                      borderRadius: "50%",
-                    }}
-                  />
-                ))}
-            </Col>
-          </Row>
-        </CardBody>
-      </Card>
+      {/* <h3 className="my-4">User Details</h3> */}
 
-      <h3 className="my-4">Category Details</h3>
-      <Card>
-        <CardBody>
-          <CardTitle tag="h5">Category Information</CardTitle>
-          <CardText>
-            <strong>Name:</strong> {category.name}
-          </CardText>
-          <img
-            src={category.image_url}
-            alt="Category"
-            style={{ width: "100px", height: "100px", borderRadius: "50%" }}
-          />
-        </CardBody>
-      </Card>
+      {/* <h3 className="my-4">Category Details</h3> */}
       <ReleasePaymentModal
         isOpen={modalOpen}
         toggle={toggleModal}

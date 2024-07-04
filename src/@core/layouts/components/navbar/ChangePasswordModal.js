@@ -67,8 +67,8 @@ const ChangePasswordModal = ({ isOpen, toggle, token }) => {
   return (
     <Modal isOpen={isOpen} toggle={toggle}>
       <ModalHeader toggle={toggle}>Change Password</ModalHeader>
-      <ModalBody>
-        <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleSubmit}>
+        <ModalBody>
           <FormGroup>
             <Label for="old_password">Old Password</Label>
             <Input
@@ -105,16 +105,16 @@ const ChangePasswordModal = ({ isOpen, toggle, token }) => {
           {message && (
             <Alert color={isError ? "danger" : "success"}>{message}</Alert>
           )}
+        </ModalBody>
+        <ModalFooter>
+          <Button color="secondary" onClick={toggle}>
+            Cancel
+          </Button>
           <LoadingButton color="primary" type="submit" isLoading={isLoading}>
             Submit
           </LoadingButton>
-        </Form>
-      </ModalBody>
-      <ModalFooter>
-        <Button color="secondary" onClick={toggle}>
-          Cancel
-        </Button>
-      </ModalFooter>
+        </ModalFooter>
+      </Form>
     </Modal>
   );
 };

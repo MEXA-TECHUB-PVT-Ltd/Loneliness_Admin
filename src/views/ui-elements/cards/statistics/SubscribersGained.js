@@ -7,7 +7,7 @@ import StatsWithAreaChart from "@components/widgets/stats/StatsWithAreaChart";
 const SubscribersGained = ({ kFormatter, count, title }) => {
   return (
     <StatsWithAreaChart
-      icon={<Users size={21} />}
+      // icon={<Users size={21} />}
       color="primary"
       statTitle={title}
       stats={count}
