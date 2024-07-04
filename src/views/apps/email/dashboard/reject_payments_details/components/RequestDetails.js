@@ -73,11 +73,11 @@ const RequestDetails = ({ data, userDetails, refetch, token }) => {
       >
         <h2 className="my-4">Request Details</h2>
         <Button
-          color="primary"
+          color="primary fw-bold"
           size="sm"
-          className="me-1"
           onClick={() => handleReleaseClick()}
-          disabled={is_released}
+          // disabled={is_released}
+          style={{ color: "#0000", fontWeight: "bold" }}
         >
           Release Payment
         </Button>
@@ -201,6 +201,10 @@ const RequestDetails = ({ data, userDetails, refetch, token }) => {
                 <Badge color={is_released === false ? "primary" : "success"}>
                   {is_released ? "Released" : "Pending"}
                 </Badge>
+              </CardText>
+              <CardText>
+                <strong>Release To:</strong>{" "}
+                <Badge color="info">{data?.released_to || "Nill"}</Badge>
               </CardText>
             </Col>
           </Row>

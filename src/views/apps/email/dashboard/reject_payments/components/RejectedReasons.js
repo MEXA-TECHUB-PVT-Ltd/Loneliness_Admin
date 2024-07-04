@@ -72,7 +72,7 @@ const RejectedReason = ({ token }) => {
       return (
         <Fragment>
           <Button
-            color="primary"
+            color="primary fw-bold"
             size="sm"
             className="me-1"
             onClick={() => handleReleaseClick(row)}
