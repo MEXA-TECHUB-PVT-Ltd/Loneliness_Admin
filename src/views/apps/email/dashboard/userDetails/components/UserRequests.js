@@ -82,7 +82,7 @@ const userRequestsColumns = [
           color = "success";
           break;
         default:
-          color = "light";
+          color = "secondary";
       }
       return <Badge color={color}>{row.status}</Badge>;
     },
