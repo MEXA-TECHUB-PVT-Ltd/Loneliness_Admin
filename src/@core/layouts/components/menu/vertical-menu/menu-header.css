@@ -20,11 +20,11 @@
 
 .nav-link-bookmark:hover {
     /* color: #FFFF !important; */
-    background-color: #f0f0f048;
+    background-color: #FCE220 !important;
 }
 
 .nav-link-bookmark.active {
-    background-color: #f0f0f081;
+    background-color: #FCE220;
     font-weight: bold;
 }
 .nav-link-bookmark .ficon {
