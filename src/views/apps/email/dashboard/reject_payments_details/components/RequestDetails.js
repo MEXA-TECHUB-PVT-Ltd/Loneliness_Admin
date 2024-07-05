@@ -76,7 +76,7 @@ const RequestDetails = ({ data, userDetails, refetch, token }) => {
           color="primary fw-bold"
           size="sm"
           onClick={() => handleReleaseClick()}
-          // disabled={is_released}
+          disabled={is_released}
           style={{ color: "#0000", fontWeight: "bold" }}
         >
           Release Payment

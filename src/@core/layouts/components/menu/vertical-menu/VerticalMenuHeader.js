@@ -77,7 +77,9 @@ const VerticalMenuHeader = (props) => {
           <NavLink
             to={item.link}
             key={item.target}
-            className="nav-link-bookmark"
+            className={`nav-link-bookmark ${
+              location.pathname === item.link ? "active" : ""
+            }`}
           >
             <IconTag className="ficon" />
             <span className="bookmark-title">{item.title}</span>

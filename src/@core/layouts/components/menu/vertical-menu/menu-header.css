@@ -11,17 +11,22 @@
     display: flex;
     align-items: center;
     padding: 0.5rem 1rem;
-    color: #6c757d;
+    /* color: #FFFF; */
     transition: color 0.3s, background-color 0.3s;
     text-decoration: none;
     margin: 5px 0;
+    border-radius: 10px;
 }
 
 .nav-link-bookmark:hover {
-    color: #FCE220;
-    background-color: #f8f9fa;
+    /* color: #FFFF !important; */
+    background-color: #f0f0f048;
 }
 
+.nav-link-bookmark.active {
+    background-color: #f0f0f081;
+    font-weight: bold;
+}
 .nav-link-bookmark .ficon {
     margin-right: 0.5rem;
 }
