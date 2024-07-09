@@ -16,12 +16,13 @@ const ReleasePaymentModal = ({ isOpen, toggle, onConfirm, isLoading }) => {
   const [releaseTo, setReleaseTo] = useState("USER");
 
   const handleConfirm = () => {
-    onConfirm(releaseTo);
-    notify("Payment has been released successfully!");
-    toggle();
+    if (onConfirm(releaseTo)) {
+      notify("Payment has been released successfully!");
+      toggle();
+    }
   };
 
-  return (
+  return (  
     <Modal isOpen={isOpen} toggle={toggle}>
       <ModalHeader toggle={toggle}>Release Payment</ModalHeader>
       <ModalBody>
