@@ -50,8 +50,8 @@ const RequestDetails = ({ data, userDetails, refetch, token }) => {
     try {
       await releasePayment({
         request_id: id,
-        buddy_id: userDetails.userId,
-        user_id: user.id,
+        user_id: userDetails.userId,
+        buddy_id: user.id,
         release_to,
         token,
       });
@@ -204,7 +204,7 @@ const RequestDetails = ({ data, userDetails, refetch, token }) => {
               </CardText>
               <CardText>
                 <strong>Release To:</strong>{" "}
-                <Badge color="info">{data?.released_to || "Nill"}</Badge>
+                <Badge color="info">{data?.release_to || "Nill"}</Badge>
               </CardText>
             </Col>
           </Row>

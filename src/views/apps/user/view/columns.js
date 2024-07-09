@@ -106,11 +106,11 @@ export const rejectPaymentColumns = [
     cell: (row) => <span>${row?.booking_price}</span>,
   },
   {
-    name: "Released Status",
+    name: "Release Status",
     sortable: true,
     minWidth: "150px",
     sortField: "total",
-    selector: (row) => row?.is_released,
+    selector: (row) => row?.is_release,
     cell: (row) => <span>{row?.is_released ? "RELEASED" : "PENDING"}</span>,
   },
 ];

@@ -5,6 +5,7 @@ import { BASE_URL } from "../../base";
 const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: BASE_URL }),
+  tagTypes: ["getRejectedPayments"],
   endpoints: (builder) => ({
     //   ** auth
     login: builder.mutation({
@@ -296,6 +297,7 @@ const api = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
+      
     }),
     getRequest: builder.query({
       query: ({ id, token }) => ({
@@ -315,6 +317,7 @@ const api = createApi({
           Authorization: `Bearer ${token}`,
         },
       }),
+      invalidatesTags: ["getRejectedPayments"],
     }),
     getCounts: builder.query({
       query: ({ token }) => ({
