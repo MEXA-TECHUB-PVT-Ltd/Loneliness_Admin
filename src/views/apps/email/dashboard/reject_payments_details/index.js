@@ -10,7 +10,7 @@ const index = () => {
   const params = useParams();
   const location = useLocation();
   const id = params.id;
-  const { data, error, isLoading, refetch } = useGetRequestQuery({ id, token });
+  const { data, error, isLoading, refetch, isFetching } = useGetRequestQuery({ id, token });
   if (isLoading) {
     return <ComponentSpinner />;
   }
@@ -29,6 +29,7 @@ const index = () => {
         userDetails={location.state || {}}
         refetch={refetch}
         token={token}
+        isFetching={isFetching}
       />
     </div>
   );

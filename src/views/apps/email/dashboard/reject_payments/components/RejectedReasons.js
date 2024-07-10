@@ -13,7 +13,7 @@ import ComponentSpinner from "../../../../../../@core/components/spinner/Loading
 import { useNavigate } from "react-router-dom";
 import ReleasePaymentModal from "./ReleasePaymentModal"; // Import the modal
 
-const RejectedReason = ({ token }) => {
+const RejectedReason = ({ token, page }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [sort, setSort] = useState("desc");
@@ -58,7 +58,7 @@ const RejectedReason = ({ token }) => {
         release_to,
         token,
       });
-      refetch(); 
+      refetch();
       toggleModal();
     } catch (error) {
       console.error("Failed to release payment:", error);
@@ -102,6 +102,9 @@ const RejectedReason = ({ token }) => {
 
   const columns = [...rejectPaymentColumns, actionColumn];
 
+  const sliceData =
+    page === "dashboard" ? data?.result?.data?.slice(0, 5) : data?.result?.data;
+
   return (
     <div className="invoice-list-wrapper">
       <Card>
@@ -118,7 +121,7 @@ const RejectedReason = ({ token }) => {
               columns={columns}
               responsive={true}
               onSort={handleSort}
-              data={data?.result?.data || []}
+              data={sliceData || []}
               sortIcon={<ChevronDown />}
               className="react-dataTable"
               defaultSortField="id"

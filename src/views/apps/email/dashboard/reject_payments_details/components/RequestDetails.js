@@ -13,8 +13,10 @@ import {
 import moment from "moment";
 import ReleasePaymentModal from "../../reject_payments/components/ReleasePaymentModal";
 import { useReleasePaymentMutation } from "../../../../../../redux/api";
+import defaultImage from "@src/assets/images/avatars/avatar-blank.png";
+import ComponentSpinner from "../../../../../../@core/components/spinner/Loading-spinner";
 
-const RequestDetails = ({ data, userDetails, refetch, token }) => {
+const RequestDetails = ({ data, userDetails, refetch, token, isFetching }) => {
   const {
     id,
     booking_date,
@@ -48,20 +50,25 @@ const RequestDetails = ({ data, userDetails, refetch, token }) => {
 
   const handleConfirmRelease = async (release_to) => {
     try {
-      await releasePayment({
+      const result = await releasePayment({
         request_id: id,
         user_id: userDetails.userId,
         buddy_id: user.id,
         release_to,
         token,
       });
-      refetch();
-      toggleModal();
+      if (result) {
+        refetch();
+        toggleModal();
+      }
     } catch (error) {
       console.error("Failed to release payment:", error);
     }
   };
 
+  if (isFetching) {
+    return <ComponentSpinner />;
+  }
   return (
     <Container>
       <div
@@ -92,7 +99,7 @@ const RequestDetails = ({ data, userDetails, refetch, token }) => {
                 {/* <strong>Full Name:</strong> */}
                 {
                   <img
-                    src={userDetails?.userImageUrl}
+                    src={userDetails?.userImageUrl || defaultImage}
                     alt="User profile"
                     style={{
                       width: "60px",
@@ -116,7 +123,7 @@ const RequestDetails = ({ data, userDetails, refetch, token }) => {
                   user.images.map((img, index) => (
                     <img
                       key={index}
-                      src={img.image_url}
+                      src={img.image_url || defaultImage}
                       alt="User profile"
                       style={{
                         width: "60px",
