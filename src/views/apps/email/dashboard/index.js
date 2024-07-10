@@ -68,7 +68,7 @@ const AnalyticsDashboard = () => {
       </Row>
       <Row className="match-height">
         <Col lg="12">
-          <RejectedReason token={token} />
+          <RejectedReason token={token} page="dashboard" />
         </Col>
       </Row>
     </div>

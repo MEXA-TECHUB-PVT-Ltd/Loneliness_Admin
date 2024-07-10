@@ -375,7 +375,7 @@ export const categoriesColumns = [
       return (
         <Fragment>
           <img
-            src={row?.image_url || "U"}
+            src={row?.image_url || defaultImage}
             alt="PROFILE IMAGE"
             style={{ width: "40px", height: "40px", borderRadius: "50%" }}
           />
@@ -407,7 +407,7 @@ export const getColumns = (type) => {
         return (
           <Fragment>
             <img
-              src={row?.user?.image_url || "U"}
+              src={row?.user?.image_url || defaultImage}
               alt="PROFILE IMAGE"
               style={{
                 width: "40px",
