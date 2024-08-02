@@ -64,7 +64,7 @@ const ToastContent = ({ t, name, role }) => {
 
 const defaultValues = {
   email: "admin@gmail.com",
-  password: "Mtechub1@@",
+  password: "Mtechub1@",
 };
 
 const Login = () => {
@@ -86,6 +86,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     data["device_token"] = "N/A";
     data["role"] = "ADMIN";
+    data["signup_type"] = "EMAIL";
     setApiError(null);
     try {
       const user = await login(data).unwrap();
